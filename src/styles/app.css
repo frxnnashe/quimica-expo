@@ -1,0 +1,47 @@
+/* src/styles/app.css */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Asegura que el contenedor principal ocupe toda la altura de la ventana */
+  position: relative; /* Necesario para que los elementos hijos con position: fixed/absolute se posicionen correctamente si fuera el caso */
+}
+
+.content {
+  flex-grow: 1; /* Permite que el contenido tome el espacio disponible */
+  overflow-y: auto; /* Permite el desplazamiento vertical si el contenido excede la altura */
+  padding-bottom: 80px; /* Añade un padding inferior para que el contenido no quede oculto por la barra de navegación fija */
+  box-sizing: border-box; /* Incluye padding en el cálculo del ancho/alto */
+}
+
+/* Estilos para el overlay de carga (usado por AuthProvider) */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+.loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #64b5f6; /* Color azul claro */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

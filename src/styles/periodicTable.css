@@ -1,0 +1,167 @@
+/* src/styles/periodicTable.css */
+.periodic-table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 20px;
+    overflow-x: auto; /* Para tablas grandes en pantallas pequeñas */
+}
+
+.periodic-table {
+    display: grid;
+    grid-template-columns: 50px repeat(18, 1fr); /* Columna para el número de periodo + 18 columnas */
+    grid-auto-rows: minmax(60px, auto); /* Altura mínima de las filas */
+    gap: 3px; /* Espacio entre las tarjetas */
+    max-width: 1200px; /* Ancho máximo para que no se extienda demasiado */
+    margin: 0 auto;
+    background-color: #eaf1f6;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Estilos para los números de grupo y periodo */
+.group-numbers {
+    grid-column: 2 / span 18; /* Ocupa las 18 columnas de los elementos */
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    gap: inherit; /* Hereda el gap de la tabla principal */
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.group-number-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.period-number-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.period-number-header.empty {
+    /* Esto es para el espacio superior izquierdo */
+    grid-column: 1;
+    grid-row: 1;
+}
+
+
+/* Estilos de la tarjeta de elemento */
+.element-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #c0c0c0;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 0.8em;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Transición para interactividad */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: #333;
+    font-weight: bold;
+    position: relative; /* Para posicionar el número atómico */
+}
+
+.element-card:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10; /* Para que se vea por encima de otros al hacer hover */
+}
+
+.element-card.empty {
+    background-color: transparent !important; /* No color para los espacios vacíos */
+    border: none !important;
+    box-shadow: none !important;
+    cursor: default;
+}
+
+.element-card .atomic-number {
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    font-size: 0.6em;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.element-card .abbreviation {
+    font-size: 1.4em;
+    font-weight: 900;
+    margin-top: 5px;
+}
+
+.element-card .name {
+    font-size: 0.7em;
+    white-space: nowrap; /* Evita saltos de línea en el nombre */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el nombre es muy largo */
+}
+
+.element-card .mass {
+    font-size: 0.6em;
+    color: rgba(0, 0, 0, 0.7);
+    margin-top: 3px;
+}
+
+
+/* Disposición de Lantánidos y Actínidos */
+.lanthanide-actinide-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1.5rem;
+    padding: 10px;
+    background-color: #eaf1f6;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: fit-content; /* Se ajusta al contenido */
+}
+
+.block-label {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.lanthanides-row, .actinides-row {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr); /* 15 elementos en estas filas */
+    gap: 3px;
+}
+
+/* Colores por tipo de elemento (puedes ajustar estos y añadir más) */
+.metal-alcalino { background-color: #ff8c8c; } /* Rojo claro */
+.metal-alcalinotérreo { background-color: #ffe0a8; } /* Naranja claro */
+.metal-de-transicion { background-color: #d8a8a8; } /* Rosa tenue */
+.metal-del-bloque-p { background-color: #a8d8d8; } /* Azul verdoso claro */
+.metaloide { background-color: #c4a8d8; } /* Púrpura claro */
+.no-metal { background-color: #a8c0d8; } /* Azul claro */
+.halogeno { background-color: #d8c0ff; } /* Morado claro */
+.gas-noble { background-color: #c0e0c0; } /* Verde menta */
+.lantanido { background-color: #ffc0c0; } /* Rosa pastel */
+.actinido { background-color: #ffb0b0; } /* Rojo pastel */
+
+/* Animación de "pop" al hacer clic o al aparecer */
+.element-card.selected {
+    animation: popAndHighlight 0.3s ease-out forwards;
+}
+
+@keyframes popAndHighlight {
+    0% { transform: scale(1); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    50% { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    100% { transform: scale(1); box-shadow: 0 2px 4px rgba(0,0,0,0.05); background-color: lightyellow; } /* O un color de resaltado */
+}

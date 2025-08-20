@@ -1,0 +1,74 @@
+/* src/styles/navBar.css */
+
+/* Posicionamiento fijo en la parte inferior central de la pantalla */
+.navbar-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* Asegura que la barra de navegación esté por encima de otros elementos */
+}
+
+.navbar-container .button-container {
+  display: flex;
+  background-color: #333333; /* Un gris oscuro para la barra de navegación */
+  width: 300px; /* Ajustado para 4 botones */
+  height: 50px; /* Altura ligeramente mayor para mejor interacción táctil */
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 25px; /* Bordes más redondeados */
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 8px 24px,
+              rgba(0, 0, 0, 0.5) 0px 16px 56px,
+              rgba(0, 0, 0, 0.4) 0px 24px 80px; /* Sombra más pronunciada para tema oscuro */
+  transition: all 0.4s ease-in-out; /* Transición suave para el hover */
+  padding: 0 10px; /* Espaciado interno */
+}
+
+.navbar-container .button-container:hover {
+  width: 330px; /* Expande el ancho al pasar el ratón */
+  box-shadow: rgba(0, 0, 0, 0.7) 0px 10px 30px,
+              rgba(0, 0, 0, 0.6) 0px 20px 70px,
+              rgba(0, 0, 0, 0.5) 0px 30px 100px; /* Sombra más grande al pasar el ratón */
+}
+
+.navbar-container .button {
+  outline: 0 !important;
+  border: 0 !important;
+  width: 45px; /* Tamaño de botón ligeramente mayor */
+  height: 45px;
+  border-radius: 50%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff; /* Color de icono blanco */
+  transition: all ease-in-out 0.3s;
+  cursor: pointer;
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+.navbar-container .button:hover {
+  transform: translateY(-5px) scale(1.1); /* Efecto de elevación y escala al pasar el ratón */
+  background-color: rgba(100, 181, 246, 0.2); /* Fondo sutil (azul claro) al pasar el ratón */
+}
+
+.navbar-container .icon {
+  font-size: 24px; /* Iconos más grandes */
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 480px) {
+    .navbar-container .button-container {
+        width: 250px; /* Ajustado para 5 botones en móvil */
+        height: 45px;
+    }
+
+    .navbar-container .button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .navbar-container .icon {
+        font-size: 20px;
+    }
+}

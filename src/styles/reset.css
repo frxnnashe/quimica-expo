@@ -1,0 +1,8 @@
+/* src/styles/reset.css */
+
+/* Resetea los márgenes y rellenos predeterminados del navegador */
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Asegura que padding y borde se incluyan en el tamaño total del elemento */
+}

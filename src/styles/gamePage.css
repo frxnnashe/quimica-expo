@@ -1,0 +1,418 @@
+/* src/styles/gamePage.css */
+
+.game-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    padding-bottom: 100px; /* Espacio para el navbar fijo */
+    background-color: #1a1a1a; /* Fondo oscuro */
+    color: #f0f0f0; /* Color de texto principal claro */
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh; /* Asegura que la página ocupe al menos toda la altura */
+    box-sizing: border-box;
+}
+
+.game-page-container h1 {
+    font-size: 2.8em;
+    color: #81c784; /* Verde claro para el título */
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.game-page-container p {
+    font-size: 1.1em;
+    color: #cccccc; /* Gris claro para el párrafo */
+    margin-bottom: 30px;
+    text-align: center;
+    max-width: 800px;
+}
+
+/* --- Estilos de la Tabla Periódica --- */
+.periodic-table-grid {
+    display: grid;
+    /* Define las columnas para la tabla periódica. 18 columnas para los grupos */
+    grid-template-columns: repeat(18, minmax(35px, 1fr)); /* Ajuste para mayor responsividad */
+    /* Define las filas para la tabla periódica. 7 filas para los periodos */
+    grid-template-rows: repeat(7, auto);
+    gap: 4px; /* Espacio entre los elementos */
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo para la tabla */
+    margin-top: 40px;
+    border: 1px solid #444444; /* Borde más oscuro */
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #2c2c2c; /* Fondo oscuro para la tabla */
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px; /* Sombra más oscura */
+    overflow-x: auto; /* Permite el desplazamiento horizontal en pantallas pequeñas */
+}
+
+.element-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 3px; /* Padding ajustado */
+    border: 1px solid #555555; /* Borde más oscuro */
+    border-radius: 6px; /* Bordes ligeramente más pequeños */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-width: 40px; /* Ancho mínimo ajustado */
+    height: 55px; /* Altura ajustada */
+    font-size: 0.65em; /* Fuente ligeramente más pequeña */
+    font-weight: 600;
+    color: #ffffff; /* Texto blanco */
+    text-align: center;
+    position: relative; /* Para posicionar el número atómico */
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px;
+}
+
+.element-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 4px 10px;
+}
+
+.element-tile.selected {
+    border: 2px solid #64b5f6; /* Borde azul claro para elementos seleccionados */
+    box-shadow: rgba(100, 181, 246, 0.5) 0px 0px 15px; /* Sombra azul para seleccionados */
+    transform: scale(1.05);
+}
+
+.atomic-number {
+    position: absolute;
+    top: 3px; /* Ajuste de posición */
+    left: 3px; /* Ajuste de posición */
+    font-size: 0.55em; /* Fuente más pequeña */
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7); /* Gris claro semitransparente */
+}
+
+.abbreviation {
+    font-size: 1.3em; /* Fuente ligeramente más pequeña */
+    font-weight: 700;
+    margin-top: 3px; /* Ajusta el margen si es necesario */
+}
+
+.element-name {
+    font-size: 0.55em; /* Fuente más pequeña */
+    font-weight: 400;
+    margin-top: 1px;
+}
+
+.empty-tile {
+    background-color: transparent;
+    border: none;
+    min-width: 40px; /* Mantener el mismo ancho para la alineación del grid */
+    height: 55px; /* Mantener la misma altura para la alineación del grid */
+}
+
+/* --- Estilos para Elementos Seleccionados y Botón de Formar Compuesto --- */
+.selected-elements-display {
+    width: 100%;
+    max-width: 800px;
+    background-color: #2c2c2c; /* Fondo oscuro para el área de selección */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;
+    text-align: center;
+}
+
+.selected-elements-display h2 {
+    font-size: 1.8em;
+    color: #64b5f6; /* Azul claro para el título */
+    margin-bottom: 15px;
+}
+
+.selected-elements-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    min-height: 40px; /* Asegura un espacio mínimo */
+    margin-bottom: 20px;
+}
+
+.selected-element-tag {
+    background-color: #555555; /* Gris medio oscuro para las etiquetas de elementos */
+    color: #ffffff; /* Texto blanco */
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 1em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px;
+}
+
+.remove-element-button {
+    background: none;
+    border: none;
+    color: #ffffff; /* Blanco para el botón de cerrar */
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: transform 0.2s ease;
+}
+
+.remove-element-button:hover {
+    transform: scale(1.2);
+    color: #ef5350; /* Rojo claro al pasar el ratón */
+}
+
+.form-compound-button {
+    background-color: #81c784; /* Verde claro para el botón de acción */
+    color: #1a1a1a; /* Texto oscuro para el botón */
+    padding: 12px 25px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: rgba(129, 199, 132, 0.4) 0px 5px 15px;
+    font-weight: 600;
+}
+
+.form-compound-button:hover {
+    background-color: #66bb6a; /* Verde más oscuro */
+    transform: translateY(-2px);
+    box-shadow: rgba(129, 199, 132, 0.6) 0px 8px 20px;
+}
+
+/* --- Estilos para Mensajes de Retroalimentación --- */
+.feedback-message {
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px;
+    animation: fadeInScale 0.5s ease-out forwards;
+}
+
+.feedback-message.success {
+    background-color: #388e3c; /* Verde oscuro */
+    color: #a5d6a7; /* Verde claro */
+    border: 1px solid #66bb6a;
+}
+
+.feedback-message.error {
+    background-color: #c62828; /* Rojo oscuro */
+    color: #ef9a9a; /* Rojo claro */
+    border: 1px solid #ef5350;
+}
+
+/* --- Estilos para Compuesto Formado --- */
+.formed-compound-display {
+    width: 100%;
+    max-width: 600px;
+    background-color: #2c2c2c; /* Fondo oscuro */
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;
+    text-align: center;
+    animation: fadeInScale 0.5s ease-out forwards;
+}
+
+.formed-compound-display h2 {
+    font-size: 1.8em;
+    color: #64b5f6; /* Azul claro */
+    margin-bottom: 15px;
+}
+
+.compound-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #3a3a3a; /* Gris oscuro ligeramente más claro */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px;
+}
+
+.compound-formula {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: #ffffff; /* Blanco */
+    margin-bottom: 5px;
+}
+
+.compound-name {
+    font-size: 1.2em;
+    color: #bbdefb; /* Azul muy claro */
+    font-weight: 500;
+    margin-bottom: 10px; /* Espacio antes de los nuevos detalles de enlace */
+}
+
+/* Nuevos estilos para los detalles del enlace */
+.compound-bond-type,
+.compound-bond-details {
+    font-size: 1em;
+    color: #cccccc; /* Gris claro */
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* --- Animaciones --- */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* --- Media Queries para Responsividad --- */
+@media (max-width: 1024px) {
+    .periodic-table-grid {
+        grid-template-columns: repeat(18, minmax(28px, 1fr));
+        gap: 3px;
+    }
+    .element-tile {
+        min-width: 35px;
+        height: 50px;
+        font-size: 0.6em;
+    }
+    .abbreviation {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-page-container h1 {
+        font-size: 2.2em;
+    }
+    .game-page-container p {
+        font-size: 1em;
+    }
+    .periodic-table-grid {
+        grid-template-columns: repeat(18, minmax(22px, 1fr)); /* Columnas más estrechas */
+        gap: 2px;
+        padding: 5px;
+    }
+    .element-tile {
+        min-width: 30px; /* Ancho mínimo más pequeño */
+        height: 45px; /* Altura más pequeña */
+        font-size: 0.55em;
+        padding: 4px 1px;
+    }
+    .atomic-number {
+        font-size: 0.5em;
+    }
+    .abbreviation {
+        font-size: 1em;
+    }
+    .element-name {
+        display: none; /* Ocultar el nombre completo para ahorrar espacio */
+    }
+    .selected-elements-display {
+        padding: 15px;
+    }
+    .selected-elements-display h2 {
+        font-size: 1.5em;
+    }
+    .selected-element-tag {
+        padding: 6px 10px;
+        font-size: 0.9em;
+    }
+    .form-compound-button {
+        padding: 10px 20px;
+        font-size: 1.1em;
+    }
+    .feedback-message, .formed-compound-display {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    .compound-formula {
+        font-size: 2em;
+    }
+    .compound-name {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-page-container h1 {
+        font-size: 1.8em;
+    }
+    .game-page-container p {
+        font-size: 0.9em;
+    }
+    .periodic-table-grid {
+        grid-template-columns: repeat(18, minmax(18px, 1fr)); /* Columnas aún más estrechas */
+        gap: 1px;
+        padding: 3px;
+    }
+    .element-tile {
+        min-width: 20px; /* Ancho mínimo para el móvil más pequeño */
+        height: 35px; /* Altura para el móvil más pequeño */
+        font-size: 0.45em; /* Fuente más pequeña */
+        padding: 3px 0px;
+        border-radius: 4px;
+    }
+    .atomic-number {
+        font-size: 0.4em;
+        top: 2px;
+        left: 2px;
+    }
+    .abbreviation {
+        font-size: 0.8em;
+    }
+    /* El nombre del elemento ya está oculto en 768px, se mantiene oculto */
+    .selected-elements-display {
+        padding: 8px;
+    }
+    .selected-elements-display h2 {
+        font-size: 1.2em;
+    }
+    .selected-element-tag {
+        padding: 4px 6px;
+        font-size: 0.7em;
+    }
+    .form-compound-button {
+        padding: 7px 12px;
+        font-size: 0.9em;
+    }
+}
+
+
+/* Contenedor scrollable */
+.periodic-table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Contenedor que centra el grid dentro del scroll */
+.periodic-table-scroll-inner {
+    display: inline-block;
+    min-width: 720px; /* O el ancho que quieras para mostrar 4-5 columnas */
+}
+
+/* El grid como estaba antes */
+.periodic-table-grid {
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    grid-template-rows: repeat(7, auto);
+    gap: 4px;
+    width: 100%;
+    max-width: 1200px;
+    border: 1px solid #444444;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #2c2c2c;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;
+    box-sizing: border-box;
+}
