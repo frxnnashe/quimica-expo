@@ -1,10 +1,21 @@
 import React from 'react';
-import '../styles/homePage.css'; // Mantener el CSS puro para esta página
+import { useNavigate } from 'react-router-dom';
+import '../styles/homePage.css'; // Corregida la ruta de importación
 
 const HomePage = () => {
     // URL base y parámetros para el modelo de Sketchfab
     const sketchfabEmbedUrl = "https://sketchfab.com/models/648df9d0f53d4e9db5149e6a7b0fada6/embed";
     const cleanEmbedParams = "?autostart=1&controls=0&ui_infos=0&ui_fadeout=1&ui_hint=0&transparent=1";
+
+    // Inicializa el hook useNavigate para la navegación
+    const navigate = useNavigate();
+
+    // Función para manejar el clic del botón y navegar a la página del juego
+    const handleStartGameClick = () => {
+        // Usa la función navigate para ir a la ruta '/game'
+        // que está definida en tu App.jsx
+        navigate('/game');
+    };
 
     return (
         <div className="home-page">
@@ -33,8 +44,10 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Botón con animación de pulsación */}
-            <button className="start-game-button pulse-animation" >Comenzar Juego</button>
+            {/* Botón con animación de pulsación y el evento onClick para la navegación */}
+            <button className="start-game-button pulse-animation" onClick={handleStartGameClick}>
+                Comenzar Juego
+            </button>
         </div>
     );
 };

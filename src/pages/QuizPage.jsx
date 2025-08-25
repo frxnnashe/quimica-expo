@@ -24,8 +24,7 @@ const QuizPage = () => {
     const [scoreSavedMessage, setScoreSavedMessage] = useState('');
 
     // Estados para el modo de profesora (admin)
-    const [adminMode, setAdminMode] = useState('quiz'); // 'quiz', 'editQuestions'
-    const [newQuestion, setNewQuestion] = useState({ question: '', options: ['', '', '', ''], correctAnswer: '' });
+    const [newQuestion, setNewQuestion] = useState({ question: '', options: ['', ''], correctAnswer: '' });
     const [editingQuestionId, setEditingQuestionId] = useState(null);
     const [adminMessage, setAdminMessage] = useState('');
 
@@ -33,7 +32,6 @@ const QuizPage = () => {
     const [topScores, setTopScores] = useState([]);
     const [loadingScores, setLoadingScores] = useState(false);
     const [topScoresMessage, setTopScoresMessage] = useState('');
-
 
     // Referencias a las colecciones de Firestore, usando authAppId para asegurar consistencia
     const quizQuestionsCollectionRef = collection(db, `artifacts/${authAppId}/quizzes/mainQuiz/questions`);
@@ -75,7 +73,6 @@ const QuizPage = () => {
         setShowNameInput(false);
         setSavingScore(false);
         setScoreSavedMessage('');
-        setAdminMode('quiz'); // Volver al modo quiz
     };
 
     // Maneja la selección de una opción
@@ -170,12 +167,32 @@ const QuizPage = () => {
         setNewQuestion((prev) => ({ ...prev, options: updatedOptions }));
     };
 
+    // Añadir una nueva opción
+    const addOption = () => {
+        if (newQuestion.options.length < 6) { // Máximo 6 opciones
+            setNewQuestion((prev) => ({ ...prev, options: [...prev.options, ''] }));
+        }
+    };
+
+    // Eliminar una opción
+    const removeOption = (index) => {
+        if (newQuestion.options.length > 2) { // Mínimo 2 opciones
+            const updatedOptions = newQuestion.options.filter((_, i) => i !== index);
+            setNewQuestion((prev) => ({ 
+                ...prev, 
+                options: updatedOptions,
+                // Si la respuesta correcta era la opción eliminada, limpiarla
+                correctAnswer: prev.correctAnswer === prev.options[index] ? '' : prev.correctAnswer
+            }));
+        }
+    };
+
     // Añadir o actualizar una pregunta
     const handleQuestionSubmit = async (e) => {
         e.preventDefault();
         setAdminMessage('');
 
-        if (!newQuestion.question || newQuestion.options.some(opt => !opt) || !newQuestion.correctAnswer) {
+        if (!newQuestion.question || newQuestion.options.some(opt => !opt.trim()) || !newQuestion.correctAnswer) {
             setAdminMessage('Por favor, completa todos los campos de la pregunta.');
             return;
         }
@@ -193,7 +210,7 @@ const QuizPage = () => {
                 await addDoc(quizQuestionsCollectionRef, newQuestion);
                 setAdminMessage('Pregunta añadida con éxito.');
             }
-            setNewQuestion({ question: '', options: ['', '', '', ''], correctAnswer: '' });
+            setNewQuestion({ question: '', options: ['', ''], correctAnswer: '' });
             setEditingQuestionId(null);
             getQuestionsForEditor(); // Recargar preguntas para el editor
         } catch (error) {
@@ -272,25 +289,18 @@ const QuizPage = () => {
 
     // Contenido para el modo de profesora
     const renderAdminContent = () => {
+        // Cargar preguntas al renderizar el admin por primera vez
+        useEffect(() => {
+            getQuestionsForEditor();
+        }, []);
+
         return (
             <div className="admin-dashboard">
                 <h1>Panel de Profesora</h1>
                 {currentUser && <p className="welcome-message">Bienvenida, {currentUser.email}!</p>}
 
                 <div className="admin-controls">
-                    <button
-                        className={`admin-tab-button ${adminMode === 'quiz' ? 'active' : ''}`}
-                        onClick={() => setAdminMode('quiz')}
-                    >
-                        Modo Estudiante
-                    </button>
-                    <button
-                        className={`admin-tab-button ${adminMode === 'editQuestions' ? 'active' : ''}`}
-                        onClick={() => { setAdminMode('editQuestions'); getQuestionsForEditor(); setAdminMessage(''); }}
-                    >
-                        Editar Preguntas
-                    </button>
-                    <button className="logout-button" onClick={logout}>Cerrar Sesión</button>
+                    <button className="logout-button" onClick={() => { logout(); window.location.reload(); }}>Cerrar Sesión</button>
                 </div>
 
                 {adminMessage && <p className={`admin-message ${adminMessage.includes('Error') ? 'error' : 'success'}`}>{adminMessage}</p>}
@@ -310,17 +320,38 @@ const QuizPage = () => {
                                 />
                             </div>
                             {newQuestion.options.map((option, index) => (
-                                <div className="form-group" key={index}>
+                                <div className="form-group option-group" key={index}>
                                     <label htmlFor={`option-${index}`}>Opción {index + 1}:</label>
-                                    <input
-                                        type="text"
-                                        id={`option-${index}`}
-                                        value={option}
-                                        onChange={(e) => handleEditorOptionChange(index, e.target.value)}
-                                        required
-                                    />
+                                    <div className="option-input-container">
+                                        <input
+                                            type="text"
+                                            id={`option-${index}`}
+                                            value={option}
+                                            onChange={(e) => handleEditorOptionChange(index, e.target.value)}
+                                            required
+                                        />
+                                        {newQuestion.options.length > 2 && (
+                                            <button 
+                                                type="button" 
+                                                className="remove-option-button" 
+                                                onClick={() => removeOption(index)}
+                                                title="Eliminar opción"
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
+                            {newQuestion.options.length < 6 && (
+                                <button 
+                                    type="button" 
+                                    className="add-option-button" 
+                                    onClick={addOption}
+                                >
+                                    + Añadir Opción
+                                </button>
+                            )}
                             <div className="form-group">
                                 <label htmlFor="correctAnswer">Respuesta Correcta (debe coincidir con una opción):</label>
                                 <input
@@ -339,7 +370,7 @@ const QuizPage = () => {
                                 {editingQuestionId && (
                                     <button type="button" className="cancel-button" onClick={() => {
                                         setEditingQuestionId(null);
-                                        setNewQuestion({ question: '', options: ['', '', '', ''], correctAnswer: '' });
+                                        setNewQuestion({ question: '', options: ['', ''], correctAnswer: '' });
                                         setAdminMessage('');
                                     }}>
                                         Cancelar Edición
@@ -376,6 +407,34 @@ const QuizPage = () => {
                             </ul>
                         )}
                     </div>
+                </div>
+
+                {/* Sección de Top de Puntuaciones para administrador */}
+                <div className="top-scores-admin-section">
+                    <h2>Top 10 Puntuaciones</h2>
+                    {topScoresMessage && <p className={`info-message ${topScoresMessage.includes('Error') ? 'error' : 'success'}`}>{topScoresMessage}</p>}
+
+                    {loadingScores ? (
+                        <div className="loading-spinner-small"></div>
+                    ) : topScores.length === 0 ? (
+                        <p>Aún no hay puntuaciones en el top.</p>
+                    ) : (
+                        <ul className="scores-list">
+                            {topScores.map((scoreEntry, index) => (
+                                <li key={scoreEntry.id} className="score-item">
+                                    <span className="score-rank">#{index + 1}</span>
+                                    <span className="score-name">{scoreEntry.userName}</span>
+                                    <span className="score-value">{scoreEntry.score} puntos</span>
+                                    <span className="score-date">
+                                        {scoreEntry.timestamp?.toDate().toLocaleDateString()}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    <button className="reset-scores-button" onClick={handleResetScores}>
+                        Reiniciar Todas las Puntuaciones
+                    </button>
                 </div>
             </div>
         );
@@ -477,7 +536,7 @@ const QuizPage = () => {
         );
     };
 
-    // Contenido para el Top de Puntuaciones (visible para todos)
+    // Contenido para el Top de Puntuaciones (visible solo para estudiantes)
     const renderTopScoresSection = () => {
         return (
             <div className="top-scores-public-section">
@@ -502,42 +561,23 @@ const QuizPage = () => {
                         ))}
                     </ul>
                 )}
-                {isTeacher && (
-                    <button className="reset-scores-button" onClick={handleResetScores}>
-                        Reiniciar Todas las Puntuaciones
-                    </button>
-                )}
             </div>
         );
     };
 
     return (
         <div className="quiz-page-container">
-            {isTeacher && (
-                <div className="teacher-toggle-mode">
-                    <button
-                        className={`toggle-button ${adminMode === 'quiz' ? 'active' : ''}`}
-                        onClick={() => setAdminMode('quiz')}
-                    >
-                        Modo Estudiante
-                    </button>
-                    <button
-                        className={`toggle-button ${adminMode === 'editQuestions' ? 'active' : ''}`}
-                        onClick={() => setAdminMode('editQuestions')}
-                    >
-                        Modo Profesora
-                    </button>
-                </div>
-            )}
-
-            {adminMode === 'quiz' ? (
-                quizFinished ? renderQuizResults() : renderQuizContent()
-            ) : (
+            {/* Si es profesor, mostrar solo el panel de administración */}
+            {isTeacher ? (
                 renderAdminContent()
+            ) : (
+                <>
+                    {/* Si es estudiante, mostrar el quiz o resultados */}
+                    {quizFinished ? renderQuizResults() : renderQuizContent()}
+                    {/* El top de puntuaciones solo visible para estudiantes */}
+                    {renderTopScoresSection()}
+                </>
             )}
-
-            {/* El top de puntuaciones siempre visible */}
-            {renderTopScoresSection()}
         </div>
     );
 };
