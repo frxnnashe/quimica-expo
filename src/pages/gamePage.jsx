@@ -116,6 +116,39 @@ const GamePage = () => {
     return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta o el mensaje cambia
   }, [showMessage]);
 
+  // Función para obtener los tipos únicos de elementos y sus colores
+  const getElementTypes = () => {
+    const types = new Map();
+    elementosQuimicos.forEach(element => {
+      if (element.tipo && element.color && !types.has(element.tipo)) {
+        types.set(element.tipo, element.color);
+      }
+    });
+    return Array.from(types.entries());
+  };
+
+  // Función para renderizar la leyenda de colores
+  const renderColorLegend = () => {
+    const elementTypes = getElementTypes();
+    
+    return (
+      <div className="color-legend">
+        <h3>Colores de la Tabla</h3>
+        <div className="legend-grid">
+          {elementTypes.map(([type, color]) => (
+            <div key={type} className="legend-item">
+              <div 
+                className="color-sample" 
+                style={{ backgroundColor: color }}
+              ></div>
+              <span className="type-name">{type}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   // Función para renderizar la tabla periódica
   const renderPeriodicTable = () => {
     // Creamos una estructura de grid para la tabla periódica
@@ -193,6 +226,9 @@ const GamePage = () => {
         Selecciona elementos de la tabla periódica (puedes seleccionar el mismo
         varias veces) y luego haz clic en "Formar Compuesto".
       </p>
+
+      {/* Leyenda de colores */}
+      {renderColorLegend()}
 
       <div className="selected-elements-display">
         <h2>Elementos Seleccionados:</h2>
